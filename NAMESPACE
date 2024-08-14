@@ -3,4 +3,5 @@
 export(influential)
 importFrom(graphics,abline)
 importFrom(graphics,points)
+importFrom(stats,na.omit)
 importFrom(stats,sd)

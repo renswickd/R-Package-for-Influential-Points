@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Me
 Maintainer: The package maintainer <yourself@somewhere.net>
 Description: The Package derives influential scores for each data points.
-  Also it plots the scores as lollipop chart highlighting the influential points
+    Also it plots the scores as lollipop chart highlighting the influential points.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
