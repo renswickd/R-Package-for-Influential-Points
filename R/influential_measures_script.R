@@ -1,8 +1,32 @@
+#' Influential Measures Calculation
+#'
+#' @param model lm model object
+#' @param type name of influence measure
+#' @param threshold optional threshold value
+#'
+#' @return list contains influence scores and influential points, plot visualizing influential points
+#' @importFrom graphics points
+#' @importFrom graphics abline
+#' @importFrom stats sd
+#' @export
+#'
+#' @examples
+#' model <- lm(mpg ~ wt + hp, data = mtcars)
+#' output1 <- influential(model, type = "cooks", threshold = 0.3)
+#' output2 <- influential(model, type = "dffits", threshold = 0.5)
+#' output3 <- influential(model, type = "hadi", threshold = 0.5)
+
 influential <- function(model, type, threshold = NULL) {
 
+  # n <- nrow(model$model)
+  # p <- length(coef(model))
+  # h <- hatvalues(model)
+  X <- as.matrix(model$model)
+  # y <- model.response(model.frame(model))
   n <- nrow(model$model)
-  p <- length(coef(model))
-  h <- hatvalues(model)
+  p <- ncol(X)
+  H <- X %*% solve(t(X) %*% X) %*% t(X)
+  h <- diag(H)
   residuals <- residuals(model)
   SSR <- sum(residuals^2) / (n - p)
 
@@ -30,7 +54,7 @@ influential <- function(model, type, threshold = NULL) {
            col = "red", pch = 19)
   }
 
-  # Return a list of influential points
+  # Return a list of influence scores and influential points
   influential_points <- which(influence_scores > (threshold %||% mean(influence_scores) + 2 * sd(influence_scores)))
   return(list(Influence_Values = influence_scores, Influential_Points = influential_points))
 }
