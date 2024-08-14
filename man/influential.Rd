@@ -17,7 +17,7 @@ influential(model, type, threshold = NULL)
 list contains influence scores and influential points, plot visualizing influential points
 }
 \description{
-Influential Measures Calculation
+The Package derives influential scores for each data points. Also it plots the scores as lollipop chart highlighting the influential points.
 }
 \examples{
 model <- lm(mpg ~ wt + hp, data = mtcars)
