@@ -23,7 +23,11 @@ influential <- function(model, type, threshold = NULL) {
 
   # Input validation - model
   # Check if the model is an lm object
+  if (all(is.null(model))) stop("Input need to be a non NULL value.")
+  # if (all(is.na(data))) stop("Input need to be a non NA value.")
+  # if (all(is.infinite(data))) stop("Input need to be a non Inf value")
   if (!inherits(model, "lm")) stop("'model' argument must be an object of class 'lm'.")
+  if (length(dim(model$model)) != 2) stop("'model' argument must have 2D shape.")
 
   # Check for NA or Inf values in model components
   if (anyNA(model$model)) stop("Invalid input. 'model' argument contains NA values.")

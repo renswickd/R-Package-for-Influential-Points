@@ -17,7 +17,7 @@ influential(model, type, threshold = NULL)
 list contains influence scores and influential points, plot visualizing influential points
 }
 \description{
-The Package derives influential scores for each data points. Also it plots the scores as lollipop chart highlighting the influential points.
+The Influential Points Analysis package includes effective methods for identifying and evaluating significant data points in linear regression models. This program helps users in identifying data points with a significant effect on the regression model's parameters by computing several influence measures such as Cook's Distance, DFFITS, and Hadi's Influence Measure. The package additionally includes visualization features that allow users to quickly identify influential points using appealing lollipop charts.
 }
 \examples{
 model <- lm(mpg ~ wt + hp, data = mtcars)
