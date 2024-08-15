@@ -68,17 +68,6 @@ influential <- function(model, type, threshold = NULL) {
     measure_name <- "Hadi's Influence Measure"
   }
 
-  # Check for NA or Inf values in influence scores
-  if (anyNA(influence_scores)) {
-    warning("NA values detected and ignored in the influence scores.")
-    influence_scores <- na.omit(influence_scores)
-  }
-
-  if (any(is.infinite(influence_scores))) {
-    warning("Infinite values detected & ignored in the influence scores.")
-    influence_scores <- influence_scores[!is.infinite(influence_scores)]
-  }
-
   if (!is.null(threshold)) {
     if (threshold > max(influence_scores, na.rm = TRUE) || threshold < min(influence_scores, na.rm = TRUE)) {
       warning("The specified 'threshold' is out of the range values of influence scores.")

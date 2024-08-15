@@ -26,7 +26,7 @@ model <- lm(mpg ~ wt + hp, data = mtcars)
 ```
 
 ```{r}
-# use the function to calculate influential values and find influential points
+# use the function to calculate cooks distance influential values and find influential points
 output1 <- influential(model, type = "cooks", threshold = 0.3)
 ```
 ```{r}
@@ -37,4 +37,15 @@ output1$Influence_Values
 # influential data points in the dataset 
 output1$Influential_Points
 ```
+
+```{r}
+# use the function to calculate dffits distance influential values and find influential points
+output2 <- influential(model, type = "dffits", threshold = 0.25)
+```
+
+```{r}
+output2$Influential_Points
+```
+
+
 

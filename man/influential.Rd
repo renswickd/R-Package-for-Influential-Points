@@ -22,6 +22,6 @@ The Influential Points Analysis package includes effective methods for identifyi
 \examples{
 model <- lm(mpg ~ wt + hp, data = mtcars)
 output1 <- influential(model, type = "cooks", threshold = 0.3)
-output2 <- influential(model, type = "dffits", threshold = 0.5)
+output2 <- influential(model, type = "dffits", threshold = 0.2)
 output3 <- influential(model, type = "hadi", threshold = 0.5)
 }
