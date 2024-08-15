@@ -14,8 +14,8 @@ custom_dffits <- function(n.coefs, fitted.values, residuals, SSR) {
 # To calculate Hadi's Influence Measure
 hadi_influence_measure <- function(n.coefs, fitted.values, residuals, SSR) {
   standardized_residuals <- residuals / sqrt(SSR * (1 - fitted.values))
-  part1 <- fitted.values / (1 - fitted.values)
-  part2 <- (standardized_residuals^2) / (n.coefs * (1 - fitted.values))
-  hadi_measure <- part1 + part2
+  val1 <- fitted.values / (1 - fitted.values)
+  val2 <- (standardized_residuals^2) / (n.coefs * (1 - fitted.values))
+  hadi_measure <- val1 + val2
   return(hadi_measure)
 }

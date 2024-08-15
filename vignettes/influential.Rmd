@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 The Influential Points Analysis package offers powerful tools for detecting and assessing key data points in linear regression models. This program assists users in pinpointing data points that substantially impact the model's parameters by calculating various influence metrics, including Cook's Distance, DFFITS, and Hadi's Influence Measure. It also provides visualization features, allowing users to easily spot influential points through visually engaging lollipop charts.
 
 ```{r setup}
-library(InfluentialPoints)
+install_github("renswickd/R-Package-for-Influential-Points")
 ```
 
 ```{r}
