@@ -98,7 +98,8 @@ influential <- function(model, type, threshold = NULL) {
   }
 
   # Determine influential points based on threshold or default criteria
-  influential_points <- which(influence_scores > (threshold %||% mean(influence_scores) + 2 * sd(influence_scores)))
+  # influential_points <- which(influence_scores > (threshold %||% mean(influence_scores) + 2 * sd(influence_scores)))
+  influential_points <- influence_scores[which(influence_scores >= threshold)]
 
   # Return a list of influence scores and influential points
   return(list(Influence_Values = influence_scores, Influential_Points = influential_points))
