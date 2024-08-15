@@ -49,12 +49,11 @@ test_that("Invalid type argument", {
   expect_error(influential(model, type = "invalid"), "Invalid input. 'type' must be from 'cooks', 'dffits', or 'hadi'.")
 })
 
-test_that("Invalid threshold", {
+test_that("Invalid & Out of range threshold", {
   expect_error(influential(model, type = "cooks", threshold = "random"), "The 'threshold' argument must be a single numeric value.")
   expect_error(influential(model, type = "cooks", threshold = c(0.3, 0.4)), "The 'threshold' argument must be a single numeric value.")
+  expect_warning(influential(model, type = "cooks", threshold = 100), "The specified 'threshold' is out of the range values of influence scores.")
+  expect_warning(influential(model, type = "cooks", threshold = -0.2), "Negative threshold detected and converted to absolute for calculation.")
 })
 
-test_that("Out-of-range threshold", {
-  expect_warning(influential(model, type = "cooks", threshold = 100), "The specified 'threshold' is out of the range values of influence scores.")
-})
 

@@ -16,16 +16,14 @@
 #' @examples
 #' model <- lm(mpg ~ wt + hp, data = mtcars)
 #' output1 <- influential(model, type = "cooks", threshold = 0.3)
-#' output2 <- influential(model, type = "dffits", threshold = 0.5)
+#' output2 <- influential(model, type = "dffits", threshold = 0.2)
 #' output3 <- influential(model, type = "hadi", threshold = 0.5)
 
 influential <- function(model, type, threshold = NULL) {
 
-  # Input validation - model
+  ## Input validation - model
   # Check if the model is an lm object
   if (all(is.null(model))) stop("Input need to be a non NULL value.")
-  # if (all(is.na(data))) stop("Input need to be a non NA value.")
-  # if (all(is.infinite(data))) stop("Input need to be a non Inf value")
   if (!inherits(model, "lm")) stop("'model' argument must be an object of class 'lm'.")
   if (length(dim(model$model)) != 2) stop("'model' argument must have 2D shape.")
 
@@ -33,14 +31,18 @@ influential <- function(model, type, threshold = NULL) {
   if (anyNA(model$model)) stop("Invalid input. 'model' argument contains NA values.")
   if (any(is.infinite(as.matrix(model$model)))) stop("Invalid input. 'model' argument contains Inf values.")
 
-  # Input validation - type
+  ## Input validation - type
   # Check if 'type' is valid
   if (!(type %in% c("cooks", "dffits", "hadi"))) stop("Invalid input. 'type' must be from 'cooks', 'dffits', or 'hadi'.")
 
-  # Input validation - threshold
+  ## Input validation - threshold
   if (!is.null(threshold)) {
     if (!is.numeric(threshold) || length(threshold) != 1) {
       stop("The 'threshold' argument must be a single numeric value.")
+    }
+    if (threshold < 0) {
+      warning("Negative threshold detected and converted to absolute for calculation.")
+      threshold <- abs(threshold)
     }
   }
 
@@ -56,7 +58,7 @@ influential <- function(model, type, threshold = NULL) {
   residuals <- residuals(model)
   SSR <- sum(residuals^2) / (n - p)
 
-  # Calculate influence measure based on 'type'
+  # Calculate influence measures
   if (type == "cooks") {
     influence_scores <- custom_cooks_distance(p, h, residuals, SSR)
     measure_name <- "Cook's Distance"
@@ -74,22 +76,41 @@ influential <- function(model, type, threshold = NULL) {
     }
   }
 
-  # Plot the influence measure
+  # Plot the influence scores
   influence_df <- data.frame(Observation = 1:length(influence_scores), Influence = influence_scores)
-  plot(influence_df$Observation, influence_df$Influence, type = "h",
-       main = paste(measure_name, "for the Data Points"), xlab = "Observation", ylab = measure_name, col = "blue")
-
-  # If a threshold is provided, highlight points above it
+ if (type == "dffits") {
+    max_abs_influence <- max(abs(influence_scores), na.rm = TRUE)
+    plot_limit <- c(max_abs_influence - 0.2, max_abs_influence + 0.2)
+    plot(influence_df$Observation, influence_df$Influence, type = "h",
+         main = paste(measure_name, "for the Data Points"), xlab = "Observation", ylab = measure_name,
+         col = "blue", ylim = c(-plot_limit[2], plot_limit[2]))
+  } else {
+    plot(influence_df$Observation, influence_df$Influence, type = "h",
+         main = paste(measure_name, "for the Data Points"), xlab = "Observation", ylab = measure_name,
+         col = "blue")
+  }
+  # plot threshold and highlight influential points
   if (!is.null(threshold)) {
     abline(h = threshold, col = "red", lty = 2)
     points(which(influence_scores > threshold), influence_scores[influence_scores > threshold],
            col = "red", pch = 19)
+    if (type == "dffits") {
+      abline(h = -threshold, col = "red", lty = 2)
+      points(which(influence_scores < -threshold), influence_scores[influence_scores < -threshold],
+             col = "red", pch = 19)
+    }
   }
 
   # Determine influential points based on threshold or default criteria
-  # influential_points <- which(influence_scores > (threshold %||% mean(influence_scores) + 2 * sd(influence_scores)))
-  influential_points <- influence_scores[which(influence_scores >= threshold)]
+  if (type == "dffits") {
+    positive_influence_points <- influence_scores[which(influence_scores >= threshold)]
+    negative_influence_points <- influence_scores[which(influence_scores <= -threshold)]
+    influential_points <- c(positive_influence_points, negative_influence_points)
+  }
+  else {
+    influential_points <- influence_scores[which(influence_scores >= threshold)]
+  }
 
-  # Return a list of influence scores and influential points
+  # Return - list of influence scores and influential points
   return(list(Influence_Values = influence_scores, Influential_Points = influential_points))
 }
